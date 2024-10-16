@@ -51,3 +51,29 @@
 - **Contribute**: Want to be a part of this innovative project? Check out our [Contribution Guidelines](CONTRIBUTING.md) to see how you can help.
 - **Learn More**: Visit the [OWASP BLT Wiki](https://owasp.org/www-project-bug-logging-tool/) for detailed documentation and resources.
 - **Join the Discussion**: Share your feedback and suggestions by opening an issue or joining our community discussions.
+
+---
+
+## 📲 Slack Integration
+
+### `/distribute` Command
+
+The `/distribute` command allows you to distribute BACON tokens to a specified user in Slack. This command is handled by a Slack bot that interacts with the BACON system.
+
+### Usage
+
+To distribute BACON tokens, use the following command in Slack:
+
+```
+/distribute <amount> bacon @<user>
+```
+
+### Example
+
+To distribute 10 BACON tokens to a user with the Slack handle `@user`, type the following command in Slack:
+
+```
+/distribute 10 bacon @user
+```
+
+The Slack bot will process the command and distribute the specified amount of BACON tokens to the user.
