@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLT-BACON Token Distribution Service</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e74c3c;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: #ecf0f1;
+        }
+        .endpoint {
+            background: #ecf0f1;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .post {
+            background: #27ae60;
+            color: white;
+        }
+        .get {
+            background: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥓 BLT-BACON Token Distribution Service</h1>
+        
+        <p>
+            <strong>BACON (Blockchain Assisted Contribution Network)</strong> is a Bitcoin-based token 
+            distribution service for the OWASP BLT project. This service handles the distribution of 
+            BACON tokens using the Bitcoin Runes protocol.
+        </p>
+
+        <h2>📡 API Endpoints</h2>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/mainnet/send-bacon-tokens</strong>
+            <p>Send BACON tokens on Bitcoin mainnet.</p>
+            <p><strong>Request Body:</strong></p>
+            <pre><code>{
+  "yaml_content": "outputs:\n- address: bc1...\n  runes:\n    BLT•BACON•TOKENS: 10",
+  "fee_rate": 50,
+  "dry_run": true,
+  "password": "your_password"  // Required when dry_run is false
+}</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/regtest/send-bacon-tokens</strong>
+            <p>Send BACON tokens on Bitcoin regtest (for testing).</p>
+            <p><strong>Request Body:</strong></p>
+            <pre><code>{
+  "num_users": 5,
+  "fee_rate": 50
+}</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/mainnet/wallet-balance</strong>
+            <p>Get the current wallet balance on mainnet.</p>
+            <p><strong>Response:</strong></p>
+            <pre><code>{
+  "success": true,
+  "balance": "..."
+}</code></pre>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/health</strong>
+            <p>Health check endpoint.</p>
+            <p><strong>Response:</strong></p>
+            <pre><code>{
+  "status": "healthy",
+  "service": "BLT-BACON Token Distribution Service",
+  "version": "1.0.0"
+}</code></pre>
+        </div>
+
+        <h2>🚀 Quick Start</h2>
+        
+        <h3>Prerequisites</h3>
+        <ul>
+            <li>Python 3.11+</li>
+            <li>Node.js 14+</li>
+            <li><code>uv</code> package manager</li>
+            <li>Cloudflare Workers account</li>
+        </ul>
+
+        <h3>Installation</h3>
+        <pre><code># Install dependencies
+uv pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# Deploy to Cloudflare
+uv run pywrangler deploy</code></pre>
+
+        <h2>🔧 Configuration</h2>
+        
+        <p>The service requires the following environment variables:</p>
+        <ul>
+            <li><code>ORD_PATH</code> - Path to ord binary</li>
+            <li><code>BITCOIN_RPC_USER_MAINNET</code> - Bitcoin RPC username for mainnet</li>
+            <li><code>BITCOIN_RPC_PASSWORD_MAINNET</code> - Bitcoin RPC password for mainnet</li>
+            <li><code>BITCOIN_RPC_URL_MAINNET</code> - Bitcoin RPC URL for mainnet</li>
+            <li><code>ORD_SERVER_URL_MAINNET</code> - Ordinal server URL for mainnet</li>
+            <li><code>WALLET_NAME_MAINNET</code> - Wallet name for mainnet</li>
+            <li><code>WALLET_API_PASSWORD</code> - API password for transaction authorization</li>
+        </ul>
+
+        <h2>📖 Documentation</h2>
+        
+        <p>For more information, visit:</p>
+        <ul>
+            <li><a href="https://github.com/OWASP-BLT/BLT-Bacon">GitHub Repository</a></li>
+            <li><a href="https://owasp-blt.github.io/BLT-Bacon/">Full Documentation</a></li>
+            <li><a href="https://owaspblt.org/">OWASP BLT Project</a></li>
+        </ul>
+
+        <h2>🔐 Security</h2>
+        
+        <p>
+            Production transactions require a password. Always use <code>"dry_run": true</code> 
+            for testing. Never commit credentials to version control.
+        </p>
+
+        <h2>📝 License</h2>
+        
+        <p>This project is part of OWASP BLT and is licensed under the terms specified in the LICENSE file.</p>
+    </div>
+</body>
+</html>

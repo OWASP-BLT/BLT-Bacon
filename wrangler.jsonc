@@ -1,0 +1,12 @@
+{
+  "name": "blt-bacon-worker",
+  "main": "src/entry.py",
+  "compatibility_flags": [
+    "python_workers"
+  ],
+  "compatibility_date": "2026-02-17",
+  "vars": {
+    "ORD_PATH": "/usr/local/bin/ord",
+    "YAML_FILE_PATH": "/tmp/batch.yaml"
+  }
+}

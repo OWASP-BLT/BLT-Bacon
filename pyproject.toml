@@ -1,0 +1,13 @@
+[project]
+name = "blt-bacon-worker"
+version = "1.0.0"
+description = "BACON Token Distribution Service - Cloudflare Python Worker"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
