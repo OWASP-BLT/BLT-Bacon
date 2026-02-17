@@ -1,6 +1,17 @@
 #!/bin/bash
 
-# This script sets up a Bitcoin Core node with Runes support and integrates with BLT Core on a VPS
+# ============================================================================
+# Bitcoin Core Node Setup Script for BLT-BACON
+# ============================================================================
+# This script sets up a Bitcoin Core node with Runes support and integrates 
+# with BLT Core on a VPS.
+#
+# This is required for the BACON token distribution infrastructure.
+# The Cloudflare Worker (src/entry.py) connects to this Bitcoin node to
+# execute token distribution transactions.
+#
+# Usage: sudo bash setup_bacon_node.sh
+# ============================================================================
 
 # Update and upgrade the system
 sudo apt-get update && sudo apt-get upgrade -y
