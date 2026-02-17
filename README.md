@@ -12,22 +12,48 @@ This service handles the distribution of BACON tokens using the Bitcoin Runes pr
 
 ## 🏗️ Architecture
 
-This is a **Cloudflare Python Worker** that provides a serverless, globally distributed API for BACON token operations. The worker communicates with Bitcoin nodes and ordinal servers to execute token transactions.
+This is a **Cloudflare Python Worker** that acts as an API gateway for BACON token operations. The worker validates requests and forwards them to a backend ord server that executes actual Bitcoin/Runes operations.
+
+### Two-Tier Architecture
+
+```
+Client Request → Cloudflare Worker (Validation/Gateway) → Backend Ord Server → Bitcoin Node
+```
+
+**Cloudflare Worker (This Repository)**:
+- Request validation and sanitization
+- Authentication and rate limiting
+- API gateway and routing
+- Global edge distribution
+
+**Backend Ord Server** (see `ord-server/` directory):
+- Bitcoin RPC communication
+- Ord wallet operations
+- Transaction execution
+- File system operations
+
+This architecture combines Cloudflare's edge performance with the flexibility of a traditional server for Bitcoin operations.
 
 ### Technology Stack
 - **Python 3.11+** - Core language
 - **Cloudflare Workers** - Serverless edge computing platform
+- **Backend Ord Server** - Flask/Python server for Bitcoin operations
 - **Bitcoin Runes** - Fungible token protocol on Bitcoin
 - **Ord** - Ordinals and Runes wallet/indexer
 
 ## 📋 Prerequisites
 
+### For Cloudflare Worker
 - Python 3.11 or higher
 - Node.js 14+ (for Cloudflare tooling)
 - `uv` package manager ([installation guide](https://github.com/astral-sh/uv))
 - Cloudflare Workers account
+
+### For Backend Ord Server
+- Python 3.11+
 - Bitcoin node with Runes support
 - Ord server/indexer
+- See `ord-server/README.md` for backend setup
 
 ## 🚀 Quick Start
 
@@ -58,7 +84,18 @@ cp .env.example .env
 nano .env
 ```
 
-### 4. Deploy to Cloudflare
+**Required Configuration:**
+- `ORD_BACKEND_URL` - URL of your backend ord server (e.g., `https://ord.example.com`)
+- `WALLET_API_PASSWORD` - Password for transaction authorization
+
+### 4. Set Up Backend Ord Server
+
+The Cloudflare Worker forwards requests to a backend server. See `ord-server/README.md` for:
+- Setting up the Flask-based ord server
+- Configuring Bitcoin RPC
+- Running with Gunicorn or systemd
+
+### 5. Deploy to Cloudflare
 
 ```bash
 # Deploy to Cloudflare Workers
@@ -167,16 +204,25 @@ Get the current balance of the mainnet wallet.
 
 ### Environment Variables
 
-All configuration is done through environment variables. See `.env.example` for a complete list.
+The Cloudflare Worker requires minimal configuration:
 
 **Required Variables:**
+- `ORD_BACKEND_URL` - Backend ord server URL (e.g., `https://ord.example.com`)
+- `WALLET_API_PASSWORD` - API password for transaction authorization
+- `RATE_LIMIT` - Maximum requests per minute (default: 60)
+
+See `.env.example` for the complete template.
+
+### Backend Server Configuration
+
+The backend ord server (Flask) needs full Bitcoin configuration. See `ord-server/.env.example` for:
 - `ORD_PATH` - Path to ord binary
 - `BITCOIN_RPC_USER_MAINNET` - Bitcoin RPC username
 - `BITCOIN_RPC_PASSWORD_MAINNET` - Bitcoin RPC password
 - `BITCOIN_RPC_URL_MAINNET` - Bitcoin RPC URL
-- `ORD_SERVER_URL_MAINNET` - Ord server URL
-- `WALLET_NAME_MAINNET` - Wallet name
-- `WALLET_API_PASSWORD` - API password for transactions
+- And more...
+
+See `ord-server/README.md` for detailed backend configuration.
 
 ### Cloudflare Configuration
 
@@ -218,10 +264,13 @@ curl -X POST http://localhost:8787/mainnet/send-bacon-tokens \
 
 ## 🔐 Security
 
+- **API Gateway Pattern**: Worker validates all requests before forwarding to backend
 - **Password Protection**: Production transactions require authentication via `WALLET_API_PASSWORD`
+- **Input Validation**: YAML content is validated for structure and size (max 1MB)
+- **Rate Limiting**: Configurable request rate limits per client
 - **Dry Run Mode**: Always test with `dry_run: true` before executing real transactions
 - **Environment Variables**: Never commit credentials to version control
-- **Rate Limiting**: Consider implementing rate limiting for production deployments
+- **Backend Isolation**: Backend server not directly exposed to internet
 
 ## 📚 Documentation
 
@@ -244,11 +293,14 @@ This project is part of OWASP BLT and is licensed under the AGPL-3.0 License. Se
 ```
 BLT-Bacon/
 ├── src/
-│   └── entry.py          # Main Cloudflare Worker entry point
+│   └── entry.py          # Cloudflare Worker (API Gateway)
+├── ord-server/           # Backend Flask server for Bitcoin ops
+│   ├── ord-api.py        # Flask application
+│   └── README.md         # Backend setup guide
 ├── docs/                 # Documentation website
 ├── wrangler.jsonc        # Cloudflare Workers configuration
-├── pyproject.toml        # Python dependencies
-├── .env.example          # Environment variables template
+├── pyproject.toml        # Python dependencies (worker)
+├── .env.example          # Environment variables (worker)
 ├── index.html            # API documentation page
 └── README.md             # This file
 ```
