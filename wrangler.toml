@@ -6,6 +6,10 @@ compatibility_flags = ["python_workers"]
 [vars]
 ENVIRONMENT = "production"
 
+# Slack secrets – set these via `wrangler secret put SLACK_SIGNING_SECRET`
+# and `wrangler secret put SLACK_BOT_TOKEN`.
+# Never commit real values here; use `wrangler secret put` or the dashboard.
+
 # Configure assets (static files)
 # All files in ./public are automatically served by Cloudflare
 # No Python file I/O needed - Cloudflare handles static asset serving
